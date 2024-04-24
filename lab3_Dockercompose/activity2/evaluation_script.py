@@ -1,6 +1,7 @@
 import socket
 import docker
 import subprocess
+import json
 
 def check_connection(ip, port):
     try:
@@ -22,17 +23,27 @@ def check_connection(ip, port):
 
 def check_docker_compose_running():
     try:
-        # Execute the command to check if Docker Compose is running
-        result = subprocess.run(['docker-compose', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+        # Execute the command to list running containers and their labels
+        result = subprocess.run(['docker', 'ps', '--format', '{{json .}}'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
 
         # Check if the command was successful (exit code 0)
         if result.returncode == 0:
-            print("Docker Compose is installed and running")
+            containers_info = result.stdout.decode('utf-8').splitlines()
+            for container_info in containers_info:
+                container = json.loads(container_info)
+                labels = container.get('Labels', {})
+                if 'com.docker.compose.project' in labels:
+                    print("Running containers were created with Docker Compose")
+                    return True
+
+            print("No containers created with Docker Compose found")
         else:
-            print("Docker Compose is not installed or not running")
+            print("Failed to list containers")
+        return False
 
     except FileNotFoundError:
-        print("Docker Compose is not installed or not running")
+        print("Docker not found or not installed")
+        return False
 
 def check_containers_running():
     try:
@@ -41,7 +52,7 @@ def check_containers_running():
 
         # Check if the containers are running
         containers_running = True
-        for container_name in ['mongodb-container', 'server-container', 'client-container']:
+        for container_name in ['activity2-mongodb-container-1', 'activity2-server-container-1', 'activity2-client-container-1']:
             container = client.containers.get(container_name)
             if container.status != 'running':
                 print(f"Container '{container_name}' is not running")

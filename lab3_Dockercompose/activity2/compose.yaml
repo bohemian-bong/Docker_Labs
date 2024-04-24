@@ -1,0 +1,23 @@
+services:
+  mongodb-container:
+    image: mongo
+    ports:
+      - "27017:27017"
+
+  server-container:
+    build: ./server
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb-container
+    environment:
+      MONGODB_CONTAINER_HOST: activity2-mongodb-container-1
+
+  client-container:
+    build: ./client
+    ports:
+      - "80:80"
+    depends_on:
+      - server-container
+    environment:
+      SERVER_URL: activity2-server-container-1
