@@ -1,0 +1,19 @@
+Lab 1: Introduction to Docker Images and Docker Commands
+
+Let's start this lab by running the most basic Docker image:
+
+docker run hello-world
+
+Other basic Docker commands that may be useful for further processes are given as follows. Try them out:
+
+1. docker images
+   In order to have a view of all the available docker images.
+
+2. docker ps
+   In order to display all the running docker containers. Please note that there are no running conatainers at present because the hello-world container gets executed once and exits immediately.
+
+3. docker inspect <imagename>  	       or     docker inspect <imageid>
+   In order to inspect or the know the details of a specific Docker image.
+
+Exercises to be completed before evaluation:
+1. Run the hello-world image on the terminal

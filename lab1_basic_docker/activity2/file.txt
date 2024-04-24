@@ -1,0 +1,1 @@
+Number of CPU cores in the container:6

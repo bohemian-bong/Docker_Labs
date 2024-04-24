@@ -1,0 +1,22 @@
+Activity 2: In this lab, we will dive more into Dockerfile by creating a Dockerfile such that it builds container with a server running on it.
+
+-------------------- Instructions to be followed ---------------------
+
+1. You have been given a python file for running a Http Flask server named app.py, a file to fill in submission details named file.txt.
+2. Create a Dockerfile with appropriate base image of Python such that the app.py is copied into the container and ont running the container the server gets started.
+3. While creating the Docker file, select a port on which the server will run on the container.
+3. Build the image from the Dockerfile and name the image "my_flask_server".
+4. Run the docker container with name "my_server_container".
+5. Make sure there is proper port mapping from the host machine to the container. Enter the port number of the hopst machine in file.txt.
+7. On requesting the server you will receive a flag. Enter the flag in flie.txt.
+8. Evaluate the lab before stopping the container.
+9. Stop the container.
+
+------------------- References to Perform the Lab --------------------
+
+1. You may require certain Dockerfile Instructions to create the Dockerfile. You can refer to:
+	https://docs.docker.com/reference/dockerfile/
+
+2. Command to run a container with port mapping
+	docker run -d --name <name_of_container> -p <host_port>:<container_port> <image_name>
+

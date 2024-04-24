@@ -1,0 +1,22 @@
+Activity 2: In this lab, you are going to learn how to restart an exited container and access its terminal.
+
+--------------------Instructions to be followed---------------------
+
+1. Check the images present currently on the system.
+2. If you don't have the Ubuntu image already downloaded, pull it from Docker Hub.
+3. Once the ubuntu image is downloaded, check for all exittedcontainers and restart the container named "my_ubuntu_container".
+4. This will give you access to the terminal of the container.
+5. Write a script named "script.sh" which outputs the conatiner id.
+6. Evaluate the lab before exiting the process
+7. Exit the terminal.
+
+--------------------References to perform the lab-------------------
+
+1. Command to restart a docker container
+	docker start -i <container_name>
+
+2. Command to display all the conatiners
+	docker ps -a
+
+3. Command to display all the exitted conatianers
+	docker ps -f status=exited

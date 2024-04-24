@@ -1,0 +1,19 @@
+Activity 2: In this lab, you are going to learn how to create an Ubuntu image, run the container and access its shell.
+
+--------------------Instructions to be followed---------------------
+
+1. Check the images present currently on the system.
+2. If you don't have the Ubuntu image already downloaded, pull it from Docker Hub.
+3. Once the ubuntu image is downloaded, create and start a container with the name "my_ubuntu_container".
+4. This will give you access to the terminal of the container.
+5. Enter the total number of cores present in the container in file.txt.
+6. Evaluate the lab before exiting ther process
+7. Exit the terminal.
+
+--------------------References to perform the lab-------------------
+
+1. Command to pull a docker image from Docker Hub
+	docker pull <image_name>
+
+2. Command to start and run a container using Docker
+	docker run -it --name <container-name> <image-name>

@@ -1,0 +1,23 @@
+Activity 1: This lab will provide tou with an introduction to Dockerfile, a text file that contains instructions to build a Docker image.
+
+--------------------Instructions to be followed-----------------------
+
+1. Create a Dockerfile such that it produces an image with git installed.
+2. Build the Dockerfile, with the name alpine-git.
+3. Tag your image as labs-git-v1. Tagging helps in identifying and tracking different versions and variations of a Docker image.
+4. Run the container created and go for evaluation while the container is running.
+5. Stop the running container.
+
+--------------------References to perform the lab---------------------
+
+1. Command to build a docker image from Dockerfile
+	docker build -t <image-name>:<tag-name>
+
+2. Command to tag a docker image
+	docker tag <image-name> <tag-name>
+
+3. Command to enter into container shell
+	docker attach <container-id>
+
+4. Command to stop a running container
+	docker stop <container-name-or-id>

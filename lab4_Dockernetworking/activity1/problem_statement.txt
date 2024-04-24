@@ -1,0 +1,24 @@
+Activity-1: This lab introduces you to Docker Networking. In this lab, you will learn how to create different networks on the same host using docker. Also you will learn how to run different containers on different networks, as a result of which different containers will be running on the same host but on different networks.
+
+------ Steps to be followed to perform the lab --------
+
+1. Create two networks using docker network which are named: my_network_1 and my_network_2
+2. Start running 2 alpine containers on my_network_1 which are named: container1 and container2  
+3. Start running 2 alpine containers on my_network_2 which are named: container3 and container4
+4. Look for the IP addresses of all the 4 containers and submit it in file.txt. 
+5. (Optional) Look which other 3 containers are pingable from each container.
+6. Evaluate the lab before stopping the containers.
+
+------------ References to perform the lab ------------
+
+1. Command to view all the networks present:
+    docker network ls
+
+2. Command to create a new bridge network:
+    docker network create -d bridge <network-name>
+
+3. Command to inspect a particular network:
+    docker network inspect <network-name>
+
+4. Command to run containers on a specific network
+    docker container run -idt --name <container-name> --net <network-name> --<image-name>
