@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  mongodb-container:
+    image: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - mongo-net
+
+  server-container:
+    build: ./server
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb-container
+    environment:
+      MONGODB_CONTAINER_HOST: mongodb-container
+    networks:
+      - mongo-net
+      - server-net
+
+  client-container:
+    build: ./client
+    ports:
+      - "80:80"
+    depends_on:
+      - server-container
+    environment:
+      SERVER_URL: http://server-container:3000
+    networks:
+      - client-net
+      - server-net
+
+networks:
+  mongo-net:
+    driver: bridge
+  server-net:
+    driver: bridge
+  client-net:
+    driver: bridge
