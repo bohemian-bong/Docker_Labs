@@ -1,102 +1,59 @@
-import socket
 import docker
-import subprocess
-import json
 
-def check_connection(ip, port):
+def check_docker_network(network_name):
+    client = docker.from_env()
     try:
-        # Create a TCP socket
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.settimeout(2)  # Timeout for connection attempt (2 seconds)
-
-        # Attempt to connect to the IP and port
-        s.connect((ip, int(port)))
-
-        # If connection succeeds, print success message
-        print(f"Connection to {ip}:{port} successful")
+        network = client.networks.get(network_name)
         return True
-
-    except Exception as e:
-        # If connection fails, print error message
-        print(f"Failed to connect to {ip}:{port}: {e}")
+    except docker.errors.NotFound:
         return False
 
-def check_docker_compose_running():
+def check_container_running(container_name):
+    client = docker.from_env()
     try:
-        # Execute the command to list running containers and their labels
-        result = subprocess.run(['docker', 'ps', '--format', '{{json .}}'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
-
-        # Check if the command was successful (exit code 0)
-        if result.returncode == 0:
-            containers_info = result.stdout.decode('utf-8').splitlines()
-            for container_info in containers_info:
-                container = json.loads(container_info)
-                labels = container.get('Labels', {})
-                if 'com.docker.compose.project' in labels:
-                    print("Running containers were created with Docker Compose")
-                    return True
-
-            print("No containers created with Docker Compose found")
-        else:
-            print("Failed to list containers")
+        container = client.containers.get(container_name)
+        return container.status == "running"
+    except docker.errors.NotFound:
         return False
 
-    except FileNotFoundError:
-        print("Docker not found or not installed")
-        return False
-
-def check_containers_running():
+def check_container_network(container_name, network_name):
+    client = docker.from_env()
     try:
-        # Initialize Docker client
-        client = docker.from_env()
+        container = client.containers.get(container_name)
+        return network_name in container.attrs['NetworkSettings']['Networks']
+    except docker.errors.NotFound:
+        return False
 
-        # Check if the containers are running
-        containers_running = True
-        for container_name in ['activity2-mongodb-container-1', 'activity2-server-container-1', 'activity2-client-container-1']:
-            container = client.containers.get(container_name)
-            if container.status != 'running':
-                print(f"Container '{container_name}' is not running")
-                containers_running = False
-
-        if containers_running:
-            print("All containers are running")
-            return True
-        else:
-            print("Not all containers are running")
-            return False
-
-    except docker.errors.NotFound as e:
-        print(f"Error: {e}. Check if Docker is installed and running.")
+def check_router_container_connected(network_names):
+    client = docker.from_env()
+    try:
+        router_container = client.containers.get("activity2-router-container-1")
+        container_networks = router_container.attrs['NetworkSettings']['Networks']
+        for network_name in ["activity2_server-network", "activity2_client-network"]:
+            if network_name not in container_networks:
+                return False
+        return True
+    except docker.errors.NotFound:
         return False
 
 def main():
-    # Read IPs and ports from file
-    print("Checking if Docker Compose is running...")
-    if check_docker_compose_running():
-        print("Checking if containers are running...")
-        if check_containers_running():
-        
-            with open('file.txt', 'r') as f:
-                lines = f.readlines()
-                database_ip = lines[0].split(":")[1].strip()
-                database_port = lines[1].split(":")[1].strip()
-                server_ip = lines[2].split(":")[1].strip()
-                server_port = lines[3].split(":")[1].strip()
-                client_ip = lines[4].split(":")[1].strip()
-                client_port = lines[5].split(":")[1].strip()
+    server_network_exists = check_docker_network("activity2_server-network")
+    client_network_exists = check_docker_network("activity2_client-network")
+    mongodb_container_running = check_container_running("activity2-mongodb-container-1")
+    server_container_running = check_container_running("activity2-server-container-1")
+    client_container_running = check_container_running("activity2-client-container-1")
+    server_container_network = check_container_network("activity2-server-container-1", "activity2_server-network")
+    client_container_network = check_container_network("activity2-client-container-1", "activity2_client-network")
+    router_connected = check_router_container_connected(["activity2-server-network-1", "activity2_client-network"])
 
-            # Check connections for database, server, and client
-            print("\nVerifying Database connection:")
-            db_connection_status = check_connection(database_ip, database_port)
-
-            print("\nVerifying Server connection:")
-            server_connection_status = check_connection(server_ip, server_port)
-
-            print("\nVerifying Client connection:")
-            client_connection_status = check_connection(client_ip, client_port)
-
-            # Return connection statuses
-            return db_connection_status, server_connection_status, client_connection_status
+    print("activity2-server-network exists:", server_network_exists)
+    print("activity2-client-network exists:", client_network_exists)
+    print("activity2-mongodb-container is running:", mongodb_container_running)
+    print("activity2-server-container is running:", server_container_running)
+    print("activity2-client-container is running:", client_container_running)
+    print("activity2-server-container is connected to activity2-server-network:", server_container_network)
+    print("activity2-client-container is connected to activity2-client-network:", client_container_network)
+    print("activity2-router-container is connected to both networks:", router_connected)
 
 if __name__ == "__main__":
     main()

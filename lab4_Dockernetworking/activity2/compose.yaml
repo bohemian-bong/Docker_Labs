@@ -1,41 +1,41 @@
-version: '3'
-
 services:
   mongodb-container:
     image: mongo
-    ports:
-      - "27017:27017"
     networks:
-      - mongo-net
+      - server-network
 
   server-container:
     build: ./server
-    ports:
-      - "3000:3000"
     depends_on:
       - mongodb-container
     environment:
-      MONGODB_CONTAINER_HOST: mongodb-container
+      MONGODB_CONTAINER_HOST: activity2-mongodb-container-1
     networks:
-      - mongo-net
-      - server-net
-
+      - server-network
+        
   client-container:
     build: ./client
     ports:
       - "80:80"
-    depends_on:
-      - server-container
-    environment:
-      SERVER_URL: http://server-container:3000
     networks:
-      - client-net
-      - server-net
+      - client-network
+    develop:
+      watch:
+      - action: sync
+        path: .
+        target: /code
+
+  router-container:
+    image: alpine
+    command: sh -c "sleep infinity"
+    networks:
+      - server-network
+      - client-network
 
 networks:
-  mongo-net:
+  server-network:
     driver: bridge
-  server-net:
+  client-network:
     driver: bridge
-  client-net:
+  router-network:
     driver: bridge
