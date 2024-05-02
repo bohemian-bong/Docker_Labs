@@ -18,5 +18,7 @@ COPY . .
 # Expose port 3000
 EXPOSE 3000
 
+#CMD [ "/bin/bash", "-c", "bash /home/.evaluationScripts/activityInitiator/initactivity.sh; while :; do sleep 10; done"]
+
 # Command to run the server
 CMD ["npm", "start"]
