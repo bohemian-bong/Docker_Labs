@@ -1,0 +1,64 @@
+## Client dockerfile ----------------------------------------------------
+
+# Use the official Nginx image as base
+FROM nginx:latest
+
+# Copy the built app from the host machine to Nginx's HTML directory
+COPY . /usr/share/nginx/html
+
+
+# Expose port 80
+EXPOSE 80
+
+
+## Server dockerfile ----------------------------------------------------
+
+# Use the official Node.js image as base
+FROM node:latest
+
+# Set the working directory in the container
+WORKDIR /usr/src/app
+
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install express
+RUN npm install cors
+RUN npm install mongoose
+
+# Copy the rest of the application code
+COPY . .
+
+# Expose port 3000
+EXPOSE 3000
+
+# Command to run the server
+CMD ["npm", "start"]
+
+#compose.yaml ---------------------------------------------------------
+
+services:
+  mongodb-container:
+    image: mongo
+    ports:
+      - "27017:27017"
+
+  server-container:
+    build: ./server
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb-container
+    environment:
+      MONGODB_CONTAINER_HOST: activity2-mongodb-container-1
+
+  client-container:
+    build: ./client
+    ports:
+      - "80:80"
+    depends_on:
+      - server-container
+    environment:
+      SERVER_URL: activity2-server-container-1
+

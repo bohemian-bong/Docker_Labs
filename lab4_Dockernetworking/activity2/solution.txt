@@ -30,7 +30,7 @@ EXPOSE 3000
 # Command to run the server
 CMD ["npm", "start"]
 
-## Client Dockerfile
+## Client Dockerfile -------------------------------------------------------
 
 # Use the official Nginx image as base
 FROM nginx:latest
@@ -49,7 +49,7 @@ COPY . /usr/share/nginx/html
 # Expose port 80
 EXPOSE 80
 
-## Compose .yaml file
+## Compose .yaml file -------------------------------------------------------
 
 services:
   mongodb-container:
