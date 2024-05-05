@@ -1,6 +1,6 @@
 services:
   mongodb-container:
-    image: mongo
+    build: ./database
     networks:
       - server-network
 
@@ -19,6 +19,8 @@ services:
       - "80:80"
     networks:
       - client-network
+    environment:
+      SERVER_URL: activity2-server-container-1
     develop:
       watch:
       - action: sync

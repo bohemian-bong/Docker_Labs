@@ -2,7 +2,7 @@
 
 let todos=[]
 
-const SERVER_URL = "http://172.21.0.3:3000";
+const SERVER_URL = http://172.28.0.4:3000;
 const todoList = document.getElementById('todoList');
 const todoInput = document.getElementById('todoInput');
 

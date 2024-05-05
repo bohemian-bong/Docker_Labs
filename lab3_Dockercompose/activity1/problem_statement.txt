@@ -1,7 +1,7 @@
 Activity 1: This lab aims to introduce fundamental concepts of Docker Compose by guiding you through the development of a basic Python web application.
 	Using the Flask framework, the application is featured in Redis, providing a practical example of how Docker Compose can be applied in web development scenarios.
 
----------------PART ONE: Using Docker Compose to run containaers---------------
+---------------PART ONE: Using Docker Compose to run containers---------------
 
 Step 1: There is file named app.py in labDirectory. Read the following code carefully as it is python code of using Flask to run a web apllication with hostname "redis" and on port 6379. Copy the code to the file app.py.
 

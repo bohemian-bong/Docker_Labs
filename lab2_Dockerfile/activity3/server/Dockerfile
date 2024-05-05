@@ -4,6 +4,8 @@ FROM node:latest
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
+ENV DATABASE_URL=https://
+
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
